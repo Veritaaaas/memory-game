@@ -4,6 +4,7 @@ import './App.css'
 function App() {
   const [pokemonSprite, setPokemonSprite] = useState(null);
   const [pokemonClicked, setPokemonClicked] = useState([]);
+  const [level, setLevel] = useState(1); 
   const [names, setNames] = useState(['pikachu', 'charmander', 'squirtle', 'bulbasaur']);
 
   useEffect(() => {
@@ -25,12 +26,34 @@ function App() {
     return shuffledArray;
   }
 
+  useEffect(() => { 
+    if (level === 1) {
+      setNames(['pikachu', 'charmander', 'squirtle', 'bulbasaur']);
+    }
+    else if (level === 2) {
+      setNames(['pikachu', 'charmander', 'squirtle', 'bulbasaur', 'eevee', 'jigglypuff', 'psyduck', 'meowth']);
+    }
+    else if (level === 3) {
+      setNames(['pikachu', 'charmander', 'squirtle', 'bulbasaur', 'eevee', 'jigglypuff', 'psyduck', 'meowth', 'snorlax', 'magikarp', 'mew', 'mewtwo']);
+    }
+  }, [level]);
+
   function handleSpriteClick(name) {
     if (pokemonClicked.includes(name)) {
       alert('Game Over');
       setPokemonClicked([]);
+      setLevel(1);
     } else {
       setPokemonClicked([...pokemonClicked, name]);
+    }
+
+    if (pokemonClicked.length === pokemonSprite.length - 1) {
+      if (level === 3) {
+        alert('You win!');
+        setLevel(1);
+      }
+      setLevel(level + 1);
+      setPokemonClicked([]);
     }
   }
 
@@ -43,9 +66,6 @@ function App() {
       </div>
     ));
   }
-
-
-
 
   return (
     <>
