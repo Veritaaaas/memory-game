@@ -3,7 +3,7 @@ import './App.css'
 
 function App() {
   const [pokemonSprite, setPokemonSprite] = useState(null);
-  const [clickCount, setClickCount] = useState(0);
+  const [pokemonClicked, setPokemonClicked] = useState([]);
   const [names, setNames] = useState(['pikachu', 'charmander', 'squirtle', 'bulbasaur']);
 
   useEffect(() => {
@@ -25,10 +25,19 @@ function App() {
     return shuffledArray;
   }
 
+  function handleSpriteClick(name) {
+    if (pokemonClicked.includes(name)) {
+      alert('Game Over');
+      setPokemonClicked([]);
+    } else {
+      setPokemonClicked([...pokemonClicked, name]);
+    }
+  }
+
   function loadSprites() {
     const shuffledSprites = shuffleArray(pokemonSprite);
     return shuffledSprites.map(({ name, sprites }) => (
-      <div key={name} className="bg-gray-200 p-4 text-center" onClick={() => setClickCount(clickCount + 1)}>
+      <div key={name} className="bg-gray-200 p-4 text-center" onClick={() => handleSpriteClick(name)}>
         <img src={sprites} alt={name} className="h-64"/>
         <p>{name}</p>
       </div>
