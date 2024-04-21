@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.shrink {
+  animation: shrink 1s forwards;
+}
+
+.grow {
+  animation: grow 1s forwards;
+}
+
+@keyframes shrink {
+  from { transform: scale(1); }
+  to { transform: scale(0); }
+}
+
+@keyframes grow {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
