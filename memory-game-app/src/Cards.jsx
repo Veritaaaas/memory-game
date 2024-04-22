@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Header from './Header.jsx';
 
 // Define the levels
 const levels = [
@@ -9,10 +10,11 @@ const levels = [
 
 export function Cards() {
   const [pokemonSprite, setPokemonSprite] = useState([]);
-  const [shuffledSprites, setShuffledSprites] = useState([]);
+  const [score, setScore] = useState(0);
+  const [HighScore, setHighScore] = useState(0);
   const [pokemonClicked, setPokemonClicked] = useState([]);
   const [level, setLevel] = useState(0);
-  const [animation, setAnimation] = useState(''); 
+  const [animation, setAnimation] = useState('grow'); 
 
   // Fetch the sprites for the current level
   useEffect(() => {
@@ -21,12 +23,10 @@ export function Cards() {
         .then(response => response.json())
         .then(data => ({name, sprites: data.sprites.front_default}))
     ))
-    .then(setPokemonSprite)
+    .then(pokemonSprites => {
+      setPokemonSprite(shuffleArray(pokemonSprites));
+    });
   }, [level]);
-
-  useEffect(() => {
-    setShuffledSprites(shuffleArray(pokemonSprite));
-  }, [pokemonSprite]);
 
   // Shuffle an array
   function shuffleArray(array) {
@@ -38,64 +38,71 @@ export function Cards() {
     return shuffledArray;
   }
 
-  // Handle a sprite click
-  function handleSpriteClick(name) {
-    if (pokemonClicked.includes(name)) {
-      alert('Game Over');
+  //handleSpriteClick
+  function handleSpriteClick(pokemon) {
+    if (pokemonClicked.includes(pokemon)) {
       setPokemonClicked([]);
       setLevel(0);
+      setScore(0);
+      if (score > HighScore) {
+        setHighScore(score);
+      }
+
+      alert("Game Over");
       return;
     } 
+
+
+    
     else {
-      setPokemonClicked([...pokemonClicked, name]);
-      setAnimation('shrink');
-    }
-
-    if (pokemonClicked.length === pokemonSprite.length - 1) {
-      if (level === 2) {
-        alert('You win!');
-        setLevel(0);
-      } 
-      else {
-        setLevel(level + 1);
-        setPokemonClicked([]);
-        setAnimation('shrink');
-      }
-    }
-  }
-
-  // Handle animation changes
-  useEffect(() => {
-    if (animation === 'shrink') {
+      setPokemonClicked([...pokemonClicked, pokemon]);
+      setScore(score + 1);
+      setAnimation('shrink')
+      setPokemonSprite(shuffleArray(pokemonSprite));
       setTimeout(() => {
         setAnimation('grow');
-        setShuffledSprites(shuffleArray(pokemonSprite));
-      }, 1000);
-    } 
-    else if (animation === 'grow') {
+      }, 1000)
+    }
+  }
+
+  //detects if the level is complete
+  useEffect(() => {
+    if (pokemonClicked.length === levels[level].length) {
+
+      if (level === levels.length - 1) {
+        alert("You win!");
+        setLevel(0);
+        setScore(0);
+        if (score > HighScore) {
+          setHighScore(score);
+        }
+      }
+
+      setPokemonClicked([]);
+      setLevel(level + 1);
       setTimeout(() => {
-        setAnimation('');
+        setAnimation('grow');
       }, 1000);
     }
-  }, [animation]);
-
-  // Load the sprites
-  function loadSprites() {
-    return shuffledSprites.map(({ name, sprites }) => (
-      <div key={name} className={`bg-gray-200 p-4 text-center ${animation}`} onClick={() => handleSpriteClick(name)}>
-        <img src={sprites} alt={name} className="h-64"/>
-        <p>{name}</p>
-      </div>
-    ));
-  }
+  }, [pokemonClicked]);
 
   // Render the component
   return (
-    <div>
-      <h1 className="text-4xl text-center">Memory Game</h1>
-      <div className="grid grid-cols-4 gap-4">
-        {loadSprites()}
+    <>
+      <Header score={score} HighScore={HighScore}/>
+      <div className="pl-16 pr-16 flex justify-center">
+        <div className="grid grid-cols-4 gap-8">
+          {pokemonSprite.map((pokemon, index) => (
+            <div key={index} onClick={() => handleSpriteClick(pokemon.name)} className={`bg-black bg-opacity-25 
+              flex flex-col justify-center items-center p-1 cursor-pointer cards ${animation}`}>
+              
+              <img src={pokemon.sprites} alt={pokemon.name} className="m-0 size-40"/>
+              <p className="m-0 capitalize text-white font-Press font-press-start text-[16px]">{pokemon.name}</p>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
+    
   );
 }

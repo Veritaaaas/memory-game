@@ -1,6 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+html, body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-image: url('https://i.pinimg.com/736x/db/7a/52/db7a52c1e598a50fc52301c77f725da3.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 
 .shrink {
   animation: shrink 1s forwards;
@@ -8,6 +21,12 @@
 
 .grow {
   animation: grow 1s forwards;
+}
+
+.cards:hover {
+  transform: scale(1.1) !important;
+  background-color: rgba(0, 0, 0, 0.6);
+  transition: transform 0.5s ease-in-out;
 }
 
 @keyframes shrink {
