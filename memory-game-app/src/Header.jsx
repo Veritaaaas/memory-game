@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import lightBulb from './assets/light_bulb.png';
+import trophy from './assets/trophy.png';
 import pokeball from './assets/pokeball.png';
 import close from './assets/close.png';
 
@@ -26,7 +27,7 @@ function Header({ score, HighScore }) {
             </header>
             <div className="text-2xl flex items-center justify-center mb-4 font-Press font-press-start">
                 <h4 className="mx-6">Score: {score}</h4>
-                <h4 className="flex items-center mx-6">High Score: {HighScore}<img src="src/assets/trophy.png" className="h-10"/></h4>
+                <h4 className="flex items-center mx-6">High Score: {HighScore}<img src={trophy} className="h-10"/></h4>
             </div>
             {showInfo &&
                 <div className="fixed inset-0 flex items-center justify-center z-10 bg-black bg-opacity-50">
